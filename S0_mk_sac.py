@@ -5,7 +5,7 @@ import glob
 import os
 
 time = UTCDateTime('2020-03-07T17:34:40Z')
-event_dir = '../event15_'
+event_dir = '../event15'
 
 st_lst = open('./stations_YA.txt')
 # hdl = st_lst.readline()

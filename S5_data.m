@@ -24,16 +24,16 @@
 %%
 
 clear;clc;close all;
-event_dir = '../event22/';
-T.evid = 'T022';
-t_b = 150; dt=30; n_window = 12;
-time_center = datetime(2020,03,08,09,26,00);
+event_dir = '../event15/';
+load([event_dir 'mw/dists.mat'])
+T.evid = 'T015';
+t_b = 390; dt=30; n_window = 13;
+time_center = datetime(2020,03,07,17,34,40);
 
 T.b = time_center - seconds(600 - t_b);
-T.e = time_center + seconds(600 - t_b + dt*n_window);
+T.e = time_center + seconds(t_b + dt*n_window - 600);
 
-T.train_loc = [-0.88488 -0.61877 -0.52079 -0.08187 0.18516 0.5258 ...
-    1.0083 1.3178 1.4179 1.8582 2.7111 2.9692];
+T.train_loc = dists;
 
 lon0 = -116.355645; lat0 = 33.786583; % Center of I-10
 az0 = 125.61; % I-10 heading in degrees;
@@ -62,4 +62,4 @@ for i = 1:132
         T.st{i}.flag = 0;
     end
 end
-save([event_dir 'T.mat'], 'T');
+save([event_dir 'T15.mat'], 'T');

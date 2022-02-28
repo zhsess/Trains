@@ -1,18 +1,24 @@
 clc; close all; clear
+% 1 for BF, 2 for MCF
 
-event_dir = '../event15/';
+event_dir = '../event151/';
 if exist([event_dir 'mw'],'dir')==0.
     mkdir([event_dir 'mw']);
 end
+% event15
 t_0 = 390; dt = 30;
 
 dists = [];
+e1 = [];
+e2 = [];
+t = [];
 for fig_idx = 1:13
     % BF
-    clearvars -except t_0 dt fig_idx event_dir; 
+    clearvars -except t_0 dt fig_idx event_dir dists e1 e2 t; 
     clc; close all;
     
     disp(['BF: fig_idx=' num2str(fig_idx)])
+    t = [t t_0+dt*fig_idx];
     t_b = t_0+dt*(fig_idx-1);
     t_e = t_0+dt*(fig_idx+1);
     stnm = load([event_dir 'stidx_BF.txt'])';
@@ -24,10 +30,10 @@ for fig_idx = 1:13
     All_y = [];
     All_t = [];
     All_CC = [];
-    for l = 1:length(stnm)
+    for l = 1:length(stnm)-1
         stidx0 = stnm(l);
         disp(l)
-        for j = 1:length(stnm)
+        for j = l+1:length(stnm)
             stidx1 = stnm(j);
             fnm1 = [event_dir 'data/R' num2str(stidx0) '.SAC'];
             fnm2 = [event_dir 'data/R' num2str(stidx1) '.SAC'];
@@ -68,10 +74,10 @@ for fig_idx = 1:13
     All_y = [];
     All_t = [];
     All_CC = [];
-    for l = 1:length(stnm)
+    for l = 1:length(stnm)-1
         stidx0 = stnm(l);
         disp(l)
-        for j = 1:length(stnm)
+        for j = l+1:length(stnm)
             stidx1 = stnm(j);
             fnm1 = [event_dir 'data/R' num2str(stidx0) '.SAC'];
             fnm2 = [event_dir 'data/R' num2str(stidx1) '.SAC'];
@@ -97,7 +103,7 @@ for fig_idx = 1:13
     end
     save([event_dir 'mw/' num2str(fig_idx) '_MCF.mat'])
     %%
-    clearvars -except t_0 dt fig_idx event_dir dists; clc;
+    clearvars -except t_0 dt fig_idx event_dir dists t; clc;
     figure(1)
     load([event_dir 'mw/' num2str(fig_idx) '_BF.mat'])
     
@@ -149,8 +155,12 @@ for fig_idx = 1:13
     x1 = dist1*sin(az1/180*pi); y1 = dist1*cos(az1/180*pi);
     x2 = dist2*sin(az2/180*pi); y2 = dist2*cos(az2/180*pi);
     
-    dist = -(ey1*x1-ex1*y1)/(ex*ey1-ey*ex1);
+    dist_1 = -(ey1*x1-ex1*y1)/(ex*ey1-ey*ex1);
+    dist_2 = -(ey2*x2-ex2*y2)/(ex*ey2-ey*ex2);
+    dist = (dist_1+dist_2)/2;
     dists = [dists dist];
+    e1 = [e1 [ex1;ey1]];
+    e2 = [e2 [ex2;ey2]];
 
     subplot(2,3,[2,3,5,6])
     plot([-5*ex 5*ex],[-5*ey 5*ey],'-.k','linewidth',5); hold on;axis equal;
@@ -178,7 +188,10 @@ for fig_idx = 1:13
         imwrite(I,map,[event_dir 'mv.gif'],'gif','WriteMode','append','DelayTime',0.5);
     end
 end
-save([event_dir 'mw/dists.mat'])
+
+e_MCF = e1;
+e_BF = e2;
+save([event_dir 'mw/dists.mat'], 'dists','e_MCF','e_BF', 't')
 
 
 

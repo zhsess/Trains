@@ -1,8 +1,8 @@
 from obspy.core import *
 import matplotlib.pyplot as plt
 import numpy as np
-import glob
 import os
+import glob
 
 time = UTCDateTime('2020-03-07T17:34:40Z')
 event_dir = '../event15'

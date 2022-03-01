@@ -1,7 +1,7 @@
 clc; close all; clear
 % 1 for BF, 2 for MCF
 
-event_dir = '../event151/';
+event_dir = '../event15/';
 if exist([event_dir 'mw'],'dir')==0.
     mkdir([event_dir 'mw']);
 end

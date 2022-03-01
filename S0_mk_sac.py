@@ -19,7 +19,12 @@ for i in stas:
     st_dict[idx] = [lon, lat, ele]
 mon, day = time.month, time.day
 for i in range(1001,9999):
-    ls = glob.glob('/Volumes/Hao/data/*/YA/R'+str(i)+'/*Z__2020' \
+    # mac
+    # ls = glob.glob('/Volumes/Hao/data/*/YA/R'+str(i)+'/*Z__2020' \
+    #                    +str(mon).zfill(2)+str(day).zfill(2)+'T*__*')
+    
+    # win
+    ls = glob.glob('E:/SoSAF/2020/*/*/R'+str(i)+'/*Z__2020' \
                         +str(mon).zfill(2)+str(day).zfill(2)+'T*__*')
     t_start, t_end = time-600, time+600
     if len(ls)>0:

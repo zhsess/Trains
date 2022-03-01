@@ -144,7 +144,7 @@ for fig_idx = 1:13
     az0 = 125.61; % I-10 heading in degrees;
     ex = sin(az0/180*pi); ey = cos(az0/180*pi);
 
-    lo0 = -116.355645; la0 = 33.786583; % Center of I-10
+    lo0 = -116.3549; la0 = 33.7862; % Center of I-10
     stlo1 = -116.320897; stla1 = 33.820251; % BF
     stlo2 = -116.305676; stla2 = 33.834889; % MCF
 

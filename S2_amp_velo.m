@@ -3,8 +3,17 @@ clear; clc; close all;
 az0 = 125.61; % I-10 heading in degrees;
 ex0 = sin(az0/180*pi);
 ey0 = cos(az0/180*pi);
-stlo0 = -116.322817210; % location of station 1001
+ % Center of I-10
+lo0 = -116.3549;
+la0 = 33.7862;
+% location of station 1001
+stlo0 = -116.322817210; 
 stla0 = 33.816908394;
+
+[disto_0, azo_0] = distance(la0, lo0, stla0, stlo0);
+disto_0 = disto_0*pi*6371/180;
+xo_0 = disto_0*sin(azo_0/180*pi);
+yo_0 = disto_0*cos(azo_0/180*pi);
 
 event_dir = '../event15/';
 load([event_dir 'mw/dists.mat']);
@@ -43,8 +52,8 @@ for j = 1:length(stnm)-2
 
         x_tr = -dists(i)*ex0;
         y_tr = -dists(i)*ey0;
-        x_st = x0 - 4.5*ey0;
-        y_st = y0 + 4.5*ex0;
+        x_st = x0 + xo_0;
+        y_st = y0 + yo_0;
         ex = (x_st-x_tr)/sqrt((x_st-x_tr)^2+(y_st-y_tr)^2);
         ey = (y_st-y_tr)/sqrt((x_st-x_tr)^2+(y_st-y_tr)^2);
         dist = ex*dx + ey*dy;

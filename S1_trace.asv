@@ -101,7 +101,7 @@ for fig_idx = 1:13
             All_t = [All_t; lags(I)*hdr1.delta];
         end
     end
-    save([event_dir 'mw/' num2str(fig_idx) '_MCF.mat'], 'All_CC', 'All_t', 'All_x', 'All_y')
+    save([event_dir 'mw/' num2str(fig_idx) '_MCF.mat'], '')
     %%
     clearvars -except t_0 dt fig_idx event_dir dists t; clc;
     figure(1)
@@ -159,6 +159,7 @@ for fig_idx = 1:13
     dist_2 = (ey2*x2-ex2*y2)/(ex*ey2-ey*ex2);
     dist = (dist_1+dist_2)/2;
     dists = [dists dist];
+    disp(dists)
     e1 = [e1 [ex1;ey1]];
     e2 = [e2 [ex2;ey2]];
 

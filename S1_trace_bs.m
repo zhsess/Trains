@@ -6,13 +6,10 @@ if exist([event_dir 'mw'],'dir')==0.
     mkdir([event_dir 'mw']);
 end
 % event15
-t_0 = 390; dt = 30;
-
 dist_bs = zeros(100,13);
 th_mcfs = zeros(100,13);
 th_bfs = zeros(100,13);
 e2 = [];
-t = 390:30:750;
 
 for i = 1:100 % times of boot-strap
     randI_BF = rand(5151,1)<0.6;

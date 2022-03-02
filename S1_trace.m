@@ -6,21 +6,21 @@ if exist([event_dir 'mw'],'dir')==0.
     mkdir([event_dir 'mw']);
 end
 % event15
-t_0 = 390; dt = 30;
+t_0 = 420; dt = 30;
 
-dists = [];
-e1 = [];
-e2 = [];
 t = [];
+dist_tr = [];
+e_tr1 = [];
+e_tr2 = [];
 for fig_idx = 1:13
     % BF
-    clearvars -except t_0 dt fig_idx event_dir dists e1 e2 t; 
     clc; close all;
+    clearvars -except t_0 dt fig_idx event_dir dist_tr e_tr1 e_tr2 t; 
     
     disp(['BF: fig_idx=' num2str(fig_idx)])
-    t = [t t_0+dt*fig_idx];
-    t_b = t_0+dt*(fig_idx-1);
-    t_e = t_0+dt*(fig_idx+1);
+    t = [t t_0+dt*(fig_idx-1)];
+    t_b = t_0+dt*(fig_idx-2);
+    t_e = t_0+dt*fig_idx;
     stnm = load([event_dir 'stidx_BF.txt'])';
     stnm = stnm(:); I = ~isnan(stnm);
     stnm = stnm(I);
@@ -57,10 +57,10 @@ for fig_idx = 1:13
             All_t = [All_t; lags(I)*hdr1.delta];
         end
     end
-    save([event_dir 'mw/' num2str(fig_idx) '_BF.mat'])
+    save([event_dir 'mw/' num2str(fig_idx) '_BF.mat'], 'All_CC', 'All_t', 'All_x', 'All_y')
     
     % MCF
-    clearvars -except t_0 dt fig_idx event_dir; clc;
+    clearvars -except t_0 dt fig_idx event_dir dist_tr e_tr1 e_tr2 t; clc;
     
     disp(['MCF: fig_idx=' num2str(fig_idx)])
     t_b = t_0+dt*(fig_idx-1);
@@ -103,7 +103,8 @@ for fig_idx = 1:13
     end
     save([event_dir 'mw/' num2str(fig_idx) '_MCF.mat'], 'All_CC', 'All_t', 'All_x', 'All_y')
     %%
-    clearvars -except t_0 dt fig_idx event_dir dists t; clc;
+    clearvars -except t_0 dt fig_idx event_dir dist_tr e_tr1 e_tr2 t; clc;
+
     figure(1)
     load([event_dir 'mw/' num2str(fig_idx) '_BF.mat'])
     
@@ -158,9 +159,9 @@ for fig_idx = 1:13
     dist_1 = (ey1*x1-ex1*y1)/(ex*ey1-ey*ex1);
     dist_2 = (ey2*x2-ex2*y2)/(ex*ey2-ey*ex2);
     dist = (dist_1+dist_2)/2;
-    dists = [dists dist];
-    e1 = [e1 [ex1;ey1]];
-    e2 = [e2 [ex2;ey2]];
+    dist_tr = [dist_tr dist];
+    e_tr1 = [e_tr1 [ex1;ey1]];
+    e_tr2 = [e_tr2 [ex2;ey2]];
 
     subplot(2,3,[2,3,5,6])
     plot([-5*ex 5*ex],[-5*ey 5*ey],'-.k','linewidth',5); hold on;axis equal;
@@ -175,7 +176,7 @@ for fig_idx = 1:13
     ylim([-3 6])
     xlabel('East')
     ylabel('North')
-    title([num2str(t_b) 's Distance:' num2str(dist) 'km'])
+    title([num2str(t(end)) 's Distance:' num2str(dist) 'km'])
     set(gca,'fontsize',15)
     
     F = getframe(gcf);
@@ -189,9 +190,9 @@ for fig_idx = 1:13
     end
 end
 
-e_MCF = e1;
-e_BF = e2;
-save([event_dir 'mw/dists.mat'], 'dists','e_MCF','e_BF', 't')
+e_MCF = e_tr1;
+e_BF = e_tr2;
+save([event_dir 'mw/dists.mat'], 'dist_tr','e_MCF','e_BF', 't')
 
 
 

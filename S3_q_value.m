@@ -19,13 +19,13 @@ f = 4; %Hz
 %% event 15
 event_dir = '../event15/';
 load([event_dir 'mw/dists.mat']);
-stnm = load([event_dir 'stidx_q.txt']);
+stnm = load([event_dir 'stidx_lin.txt']);
 
 n_window = 13;
-t_b = 390; dt = 30;
+t_b = 420; dt = 30;
 
-x_tr = dists*cos(az0+90-az_r);
-y_tr = dists*sin(az0+90-az_r);
+x_tr = dist_tr*cos(az0+90-az_r);
+y_tr = dist_tr*sin(az0+90-az_r);
 
 
 for j = 1:length(stnm)
@@ -37,17 +37,29 @@ for j = 1:length(stnm)
     dist = dist*pi*6371/180;
     x = dist*sin((az-az0)/180*pi);
     y = dist*cos((az-az0)/180*pi);
-    disp(x)
+    
+    for i = 1:13
+        n_1 = round((t_b + dt*(i-2))/hdr.delta);
+        n_2 = round((t_b + dt*i)/hdr.delta);
+        A(i, j) = sqrt(mean(data(n_1:n_2).^2));
+        cost(i, j) = (y-y_tr(i))/sqrt((x-x_tr(i))^2+(y-y_tr(i))^2);
+    end
 end
-%     dist = dist*pi*6371/180;
-%     for i = 6:10
-%         n_1 = round((t_b + dt*(i-1))/hdr.delta);
-%         n_2 = round((t_b + dt*(i+1))/hdr.delta);
-%         A(i, j) = sqrt(mean(data(n_1:n_2).^2));
-%     end
-% end
-% 
-% for i = 6:10
-%     plot(smooth(A(i,:),10,'moving'))
-%     hold on
-% end
+
+len = length(stnm);
+lnA = zeros(4*(len-1), 1);
+G = zeros(4*(len-1), len);
+for i = 1:4
+    for j = 1:len-1
+        lnA(j+(i-1)*len) = log((A(8+i,j+1)*A(8,j))/(A(8+i,j)*A(8,j+1)))/(pi*f);
+        for k = 1:j
+            G(j+(i-1)*len, k) = 1/cost(8+i,j+1) - 1/cost(8+i,j);
+        end
+        G(j+(i-1)*len, k) = 1/cost(8+i,j+1) - 1;
+    end
+end
+t = G\lnA;
+
+% Q = l/(ct)
+
+plot(t)

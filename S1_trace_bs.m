@@ -2,14 +2,28 @@ clc; close all; clear
 % 1 for BF, 2 for MCF
 
 event_dir = '../event15/';
-if exist([event_dir 'mw'],'dir')==0.
-    mkdir([event_dir 'mw']);
-end
+
 % event15
 dist_bs = zeros(100,13);
 th_mcfs = zeros(100,13);
 th_bfs = zeros(100,13);
-e2 = [];
+
+az0 = 125.61; % I-10 heading in degrees;
+ex = sin(az0/180*pi); ey = cos(az0/180*pi);
+
+lo0 = -116.3549; la0 = 33.7862; % Center of I-10
+BF_lo = -116.320897; BF_la = 33.820251; % BF
+MCF_lo = -116.305676; MCF_la = 33.834889; % MCF
+
+[dist_BF, az_BF] = distance(la0, lo0, BF_la, BF_lo);
+[dist_MCF, az_MCF] = distance(la0, lo0, MCF_la, MCF_lo);
+dist_BF = dist_BF*pi*6371/180;
+dist_MCF = dist_MCF*pi*6371/180;
+x_BF = dist_BF*sin(az_BF/180*pi);
+y_BF = dist_BF*cos(az_BF/180*pi);
+x_MCF = dist_MCF*sin(az_MCF/180*pi);
+y_MCF = dist_MCF*cos(az_MCF/180*pi);
+
 
 for i = 1:100 % times of boot-strap
     randI_BF = rand(5151,1)<0.6;
@@ -21,45 +35,31 @@ for i = 1:100 % times of boot-strap
         b = -All_t(I);
         G = [All_x(I) All_y(I)];
         m = G\b;
-        ex1 = m(1)/(norm(m));
-        ey1 = m(2)/(norm(m));
+        ex_BF = m(1)/(norm(m));
+        ey_BF = m(2)/(norm(m));
     
         load([event_dir 'mw/' num2str(fig_idx) '_MCF.mat'])
         I = (All_CC>0.7)&(abs(All_t)<0.1)&randI_MCF;
         b = -All_t(I);
         G = [All_x(I) All_y(I)];
         m = G\b;
-        ex2 = m(1)/(norm(m));
-        ey2 = m(2)/(norm(m));
-    
-        az0 = 125.61; % I-10 heading in degrees;
-        ex = sin(az0/180*pi); ey = cos(az0/180*pi);
-    
-        lo0 = -116.3549; la0 = 33.7862; % Center of I-10
-        stlo1 = -116.320897; stla1 = 33.820251; % BF
-        stlo2 = -116.305676; stla2 = 33.834889; % MCF
-    
-        [dist1, az1] = distance(la0, lo0, stla1, stlo1);
-        [dist2, az2] = distance(la0, lo0, stla2, stlo2);
-        dist1 = dist1*pi*6371/180;
-        dist2 = dist2*pi*6371/180;
-        x1 = dist1*sin(az1/180*pi); y1 = dist1*cos(az1/180*pi);
-        x2 = dist2*sin(az2/180*pi); y2 = dist2*cos(az2/180*pi);
-        
-        dist_1 = (ey1*x1-ex1*y1)/(ex*ey1-ey*ex1);
-        dist_2 = (ey2*x2-ex2*y2)/(ex*ey2-ey*ex2);
-        dist = (dist_1+dist_2)/2;
+        ex_MCF = m(1)/(norm(m));
+        ey_MCF = m(2)/(norm(m));
+         
+        dist_tr_BF = (ey_BF*x_BF-ex_BF*y_BF)/(ex*ey_BF-ey*ex_BF);
+        dist_tr_MCF = (ey_MCF*x_MCF-ex_MCF*y_MCF)/(ex*ey_MCF-ey*ex_MCF);
+        dist = (dist_tr_BF+dist_tr_MCF)/2;
         dist_bs(i, fig_idx) = dist;
 
-        th_bf = 90 - atan(ey1/ex1)*180/pi;
-        th_mcf = 90 - atan(ey2/ex2)*180/pi;
-        th_bfs(i, fig_idx) = th_bf;
-        th_mcfs(i, fig_idx) = th_mcf;
+        th_BF = 90 - atan(ey_BF/ex_BF)*180/pi;
+        th_MCF = 90 - atan(ey_MCF/ex_MCF)*180/pi;
+        th_BFs(i, fig_idx) = th_BF;
+        th_MCFs(i, fig_idx) = th_MCF;
 
     end
 end
 
-save([event_dir 'mw/dists_bs.mat'], 'dist_bs', 'th_mcfs', 'th_bfs')
+save([event_dir 'mw/dists_bs.mat'], 'dist_bs', 'th_BFs', 'th_MCFs')
 
 
 

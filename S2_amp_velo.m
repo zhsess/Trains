@@ -54,8 +54,8 @@ for j = 1:length(stnm)-2
         data1 = data1_0(n1: n2);
         data2 = data2_0(n1: n2);
 
-        x_tr = dists(i)*ex_r;
-        y_tr = dists(i)*ey_r;
+        x_tr = dist_tr(i)*ex_r;
+        y_tr = dist_tr(i)*ey_r;
         x_st = x0 + xo_0;
         y_st = y0 + yo_0;
         ex = (x_st-x_tr)/sqrt((x_st-x_tr)^2+(y_st-y_tr)^2);

@@ -1,12 +1,16 @@
 clear; clc; close all;
 
-az0 = 125.61; % I-10 heading in degrees;
-ex0 = sin(az0/180*pi);
-ey0 = cos(az0/180*pi);
- % Center of I-10
+ % Location of I-10
+az_r = 125.61;
+ex_r = sin(az_r/180*pi);
+ey_r = cos(az_r/180*pi);
 lo0 = -116.3549;
 la0 = 33.7862;
+
 % location of station 1001
+az0 = 39;
+ex0 = sin(az0/180*pi);
+ey0 = cos(az0/180*pi);
 stlo0 = -116.322817210; 
 stla0 = 33.816908394;
 
@@ -37,7 +41,7 @@ for j = 1:length(stnm)-2
 
     y0 = (hdr2.stla+hdr1.stla - 2*stla0)/360*pi*6371;
     x0 = (hdr2.stlo+hdr1.stlo - 2*stlo0)*cos(stla0/180*pi)/360*pi*6371;
-    dist_0(j) = ex0*y0 - ey0*x0;
+    dist_0(j) = ex0*x0 + ey0*y0;
     
     % Rayleigh phase velocity
     dy = (hdr2.stla - hdr1.stla)/180*pi*6371;
@@ -50,8 +54,8 @@ for j = 1:length(stnm)-2
         data1 = data1_0(n1: n2);
         data2 = data2_0(n1: n2);
 
-        x_tr = -dists(i)*ex0;
-        y_tr = -dists(i)*ey0;
+        x_tr = dists(i)*ex_r;
+        y_tr = dists(i)*ey_r;
         x_st = x0 + xo_0;
         y_st = y0 + yo_0;
         ex = (x_st-x_tr)/sqrt((x_st-x_tr)^2+(y_st-y_tr)^2);

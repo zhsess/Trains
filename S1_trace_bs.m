@@ -49,8 +49,8 @@ for i = 1:100 % times of boot-strap
         x1 = dist1*sin(az1/180*pi); y1 = dist1*cos(az1/180*pi);
         x2 = dist2*sin(az2/180*pi); y2 = dist2*cos(az2/180*pi);
         
-        dist_1 = -(ey1*x1-ex1*y1)/(ex*ey1-ey*ex1);
-        dist_2 = -(ey2*x2-ex2*y2)/(ex*ey2-ey*ex2);
+        dist_1 = (ey1*x1-ex1*y1)/(ex*ey1-ey*ex1);
+        dist_2 = (ey2*x2-ex2*y2)/(ex*ey2-ey*ex2);
         dist = (dist_1+dist_2)/2;
         dist_bs(i, fig_idx) = dist;
 

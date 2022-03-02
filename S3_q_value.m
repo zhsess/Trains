@@ -24,8 +24,8 @@ stnm = load([event_dir 'stidx_q.txt']);
 n_window = 13;
 t_b = 390; dt = 30;
 
-x_tr = dists*cos(az_r-az0-90);
-y_tr = dists*cos(az_r-az0-90);
+x_tr = dists*cos(az0+90-az_r);
+y_tr = dists*sin(az0+90-az_r);
 
 
 for j = 1:length(stnm)

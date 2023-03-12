@@ -1,0 +1,33 @@
+This is the instruction for data structure of train singles detected and analyzed using SoSAFZ nodal deployment in 2020.
+
+Authors: Hao Zhang, Haoran Meng, and Yehuda Ben-Zion
+
+Date: Oct 4th, 2021 
+
+The raw waveforms can be accessed through the IRIS Data Management Center https://doi.org/10.7914/SN/YA_2020 (Vernon et al., 2020).
+
+----------------------------------------------------------
+
+The dataset contains vertical amplitude of xxx train events detected using the continuous waveforms recorded by the SoSAFZ nodal array. The movement of each train event is determined by resolving the Rayleigh wavefront at two 2D subarrays. For each location of the train, we estimate the median absolution value of vertical component of ground motions recorded by each node in a xx s window. Trains generally generate stronger ground motions when approaching a seismograph and weaker ground motions when leaving due to geometrical spreading and attenuation.
+
+The data are documented in Matlab structures for each train event. For example, train event T001 saved in "T001.mat" has a data structure:
+
+T.evid = 'T001'; % event ID
+T.b = datetime(Y,M,D,H,MI,S,MS); % start time of this event
+T.e = datetime(Y,M,D,H,MI,S,MS); % end time of this event
+
+T.train_loc = [-3.00 -2.00 -1.00 0.00 1.00 2.00 3.00]; % 1*n train location, unit: km
+T.train_loc_lat = [33.1323 33.1323 33.1323 33.1323 33.1323 33.1323 33.1323]; % 1*n latitude of train locations
+T.train_loc_lon = [-117.1323 -117.1323 -117.1323 -117.1323 -117.1323 -117.1323 -117.1323]; % 1*n longitude of train locations
+
+% i ranges from 1 to m corresponding to all stations in the array.
+T.st{i}.lat = 33.1323; % station latitude
+T.st{i}.lon = -117.1323; % station longitude
+T.st{i}.flag = 1; % = 1: station i has good amplitude measurements; = 0: no measurements
+
+% if T.st{i}.flag = 0; no need to assign the following variables
+T.st{i}.A = [1.00 2.00 3.00 4.00 3.00 2.00 1.00]; % 1*n amplitude, unit: count
+
+
+
+ 

@@ -30,10 +30,10 @@ T.evid = 'T015';
 t_b = 390; dt=30; n_window = 13;
 time_center = datetime(2020,03,07,17,34,40);
 
-T.b = time_center - seconds(600 - t_b);
-T.e = time_center + seconds(t_b + dt*n_window - 600);
+T.b = time_center + seconds(t_b - 600);
+T.e = time_center + seconds(t_b + dt*n_window +dt - 600);
 
-T.train_loc = dists;
+T.train_loc = dist_tr;
 
 lon0 = -116.355645; lat0 = 33.786583; % Center of I-10
 az0 = 125.61; % I-10 heading in degrees;
